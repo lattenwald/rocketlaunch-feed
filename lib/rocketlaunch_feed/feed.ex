@@ -43,7 +43,11 @@ defmodule RocketlaunchFeed.Feed do
       "vehicle" => %{"name" => vehicle_name},
       "pad" => %{
         "name" => pad_name,
-        "location" => %{"country" => pad_location_country, "name" => pad_location_name}
+        "location" => %{
+          "country" => pad_location_country,
+          "name" => pad_location_name,
+          "statename" => pad_location_statename
+        }
       },
       "launch_description" => launch_description,
       "missions" => missions,
@@ -73,7 +77,7 @@ defmodule RocketlaunchFeed.Feed do
       end
 
     title =
-      ~s(#{if suborbital, do: "Suborbital ", else: ""}#{provider_name} - #{vehicle_name} - #{pad_name}, #{pad_location_name}, #{pad_location_country} - #{launch_time})
+      ~s(#{if suborbital, do: "Suborbital ", else: ""}#{provider_name} - #{vehicle_name} - #{pad_name}, #{pad_location_name}, #{if pad_location_statename != nil, do: "#{pad_location_statename}, ", else: ""}#{pad_location_country} - #{launch_time})
 
     missions_text =
       missions
