@@ -18,7 +18,14 @@ defmodule RocketlaunchFeed.Feed do
             [
               {:title, nil, "RocketLaunch feed"},
               {:description, nil, "Feed generated from JSON API"},
-              {:link, nil, "https://www.rocketlaunch.live/"}
+              {:link, nil, "https://www.rocketlaunch.live/"},
+              {:"atom:link",
+               %{
+                 rel: "self",
+                 type: "application/rss+xml",
+                 href: "https://rocketlaunch.lattenwald.org/feed.rss",
+                 "xmlns:atom": "http://www.w3.org/2005/Atom"
+               }, nil}
             ] ++ items}
          ]}
 
@@ -38,6 +45,7 @@ defmodule RocketlaunchFeed.Feed do
   def launch_to_xml_structure(json) do
     %{
       "slug" => slug,
+      "id" => id,
       "sort_date" => sort_date,
       "provider" => %{"name" => provider_name},
       "vehicle" => %{"name" => vehicle_name},
@@ -82,11 +90,11 @@ defmodule RocketlaunchFeed.Feed do
     missions_text =
       missions
       |> Enum.map(fn %{"name" => mission_name, "description" => mission_description} ->
-        ~s("#{mission_name}: #{mission_description}")
+        ~s(#{mission_name}: #{mission_description})
       end)
-      |> Enum.join("\n")
+      |> Enum.join("<br />")
 
-    text = ~s(#{launch_description}\n\n#{missions_text})
+    text = ~s(#{launch_description}<br/><br/>#{missions_text})
 
     link = ~s(https://rocketlaunch.live/launch/#{slug})
 
@@ -94,10 +102,13 @@ defmodule RocketlaunchFeed.Feed do
 
     {sort, _} = Integer.parse(sort_date)
 
+    guid = UUID.uuid3("8ad89bbc-1ef3-4d04-a606-5afef472b0a6", "#{id}")
+
     {sort,
      {:item, nil,
       [
         {:title, nil, title},
+        {:guid, %{isPermaLink: false}, guid},
         {:link, nil, link},
         {:description, nil, text}
       ] ++ categories}}

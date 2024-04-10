@@ -30,7 +30,8 @@ defmodule RocketlaunchFeed.MixProject do
       {:httpoison, "~> 2.2"},
       {:poison, "~> 5.0"},
       {:timex, "~> 3.7"},
-      {:xml_builder, "~> 2.2"}
+      {:xml_builder, "~> 2.2"},
+      {:uuid, "~> 1.1"}
     ]
   end
 
